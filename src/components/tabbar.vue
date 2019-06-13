@@ -37,8 +37,8 @@ export default {
         active: require('../images/icon1_on.png')
       },
       iconCenter: {
-        normal: require('../images/icon4.png'),
-        active: require('../images/icon4_on.png')
+        normal: require('../images/icon2.png'),
+        active: require('../images/icon2_on.png')
       }
     }
   },

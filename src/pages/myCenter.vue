@@ -1,7 +1,7 @@
 <template>
   <div class="myCenter-container">
     myCenter
-    <tabbar :activeIndex="3"></tabbar>
+    <tabbar :activeIndex="1"></tabbar>
   </div>
 </template>
 

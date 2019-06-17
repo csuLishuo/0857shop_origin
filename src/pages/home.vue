@@ -46,10 +46,10 @@
       top: 50%;
       right: px2rem(30);
       width: px2rem(77);
-	    height: px2rem(164);
-	    background-color: #282a2e;
-	    border-radius: px2rem(39);
-	    opacity: 0.7;
+      height: px2rem(164);
+      background-color: #282a2e;
+      border-radius: px2rem(39);
+      opacity: 0.7;
       display: flex;
       flex-direction: column;
       flex-wrap: nowrap;
@@ -58,7 +58,7 @@
       .wrapper{
         display: flex;
         align-items: center;
-        justify-content: center; 
+        justify-content: center;
         width: px2rem(43);
         height: 50%;
         .img-box{
@@ -119,21 +119,66 @@
       }
       .listbox{
         .wrapper{
-          border-bottom: 1px solid #ececec;
-          .btn{
-            width: px2rem(59);
-            height: px2rem(59);
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: space-between;
+          height: px2rem(259);
+          background: #fff;
+          .img-box{
+            width: px2rem(295);
+            height: px2rem(259);
             img{
               width: 100%;
               height: 100%;
             }
           }
-          .des{
-            font-size: px2rem(22);
-            line-height: px2rem(36);
-            color: #9c9c9c;
+          .right-box{
+            width: px2rem(430);
+            height: px2rem(259);
+            position: relative;
+            .title{
+              font-size: px2rem(28);
+              width: px2rem(390);
+              line-height: px2rem(38);
+              margin-top: px2rem(16);
+              color: #393939;
+            }
+            .price{
+              color: #ff6c00;
+              font-size: px2rem(24);
+              font-weight: bold;
+              margin-top: px2rem(50);
+              span{
+                font-size: px2rem(34);
+                vertical-align: bottom;
+              }
+            }
+            .btn{
+              width: px2rem(59);
+              height: px2rem(59);
+              position: absolute;
+              bottom: px2rem(54);
+              right: px2rem(24);
+              img{
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .info-bottom{
+              font-size: px2rem(22);
+              line-height: px2rem(36);
+              color: #9c9c9c;
+            }
+            .border{
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              border-bottom: 1px solid #ececec;
+            }
           }
-          .van-card{
+          /*.van-card{
             background-color: #fff;
           }
           .tags{
@@ -149,7 +194,7 @@
               border-radius: px2rem(10);
               margin-right: px2rem(20);
             }
-          }
+          }*/
         }
       }
     }
@@ -227,18 +272,26 @@
       </div>
       <div class="listbox">
         <div class="wrapper">
-          <van-card
-            price="2.00"
-            desc="描述信息"
-            title="PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖"
-            :thumb="images[0]"
-            origin-price="10.00"
-          >
-            <div class="btn" slot="num"><img src="../images/icon3.png" alt=""></div>
-            <div class="des" slot="bottom">
-              已售1389/剩2000
-            </div>
-          </van-card>
+          <div class="img-box"><img src="../images/icon3.png" alt=""></div>
+          <div class="right-box">
+            <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
+            <div class="des"></div>
+            <div class="price">￥<span>599.00</span></div>
+            <div class="info-bottom">已售1389/剩2000</div>
+            <div class="btn"><img src="../images/icon3.png" alt=""></div>
+            <div class="border"></div>
+          </div>
+        </div>
+        <div class="wrapper">
+          <div class="img-box"><img src="../images/icon3.png" alt=""></div>
+          <div class="right-box">
+            <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
+            <div class="des"></div>
+            <div class="price">￥<span>599.00</span></div>
+            <div class="info-bottom">已售1389/剩2000</div>
+            <div class="btn"><img src="../images/icon3.png" alt=""></div>
+            <div class="border"></div>
+          </div>
         </div>
       </div>
     </div>

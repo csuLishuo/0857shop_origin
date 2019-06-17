@@ -22,7 +22,7 @@
       img{
         width: 100%;
         height: 100%;
-        transform: rotate(180deg) 
+        transform: rotate(180deg);
       }
     }
   }
@@ -77,7 +77,7 @@
     <div class="area-2">
       <div class="wrapper">
         <div class="img-box">
-          <img src="../images/icon2.png" alt="">          
+          <img src="../images/icon2.png" alt="">
         </div>
         <div class="text-box">
           <div class="title">平台通知</div>
@@ -88,7 +88,6 @@
     <tabbar :activeIndex="1"></tabbar>
   </div>
 </template>
-
 <script>
 import { Toast } from 'vant'
 import tabbar from '../components/tabbar'
@@ -117,4 +116,3 @@ export default {
   }
 }
 </script>
-

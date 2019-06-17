@@ -106,7 +106,6 @@
     <tabbar :activeIndex="1"></tabbar>
   </div>
 </template>
-
 <script>
 import { Toast } from 'vant'
 import tabbar from '../components/tabbar'

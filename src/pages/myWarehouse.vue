@@ -22,7 +22,7 @@
       img{
         width: 100%;
         height: 100%;
-        transform: rotate(180deg) 
+        transform: rotate(180deg);
       }
     }
   }
@@ -42,24 +42,66 @@
     }
     .goodsList{
       .wrapper{
-          border-bottom: 1px solid #ececec;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: space-between;
+        height: px2rem(259);
+        background: #fff;
+        .img-box{
+          width: px2rem(295);
+          height: px2rem(259);
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .right-box{
+          width: px2rem(430);
+          height: px2rem(259);
+          position: relative;
+          .title{
+            font-size: px2rem(28);
+            width: px2rem(390);
+            line-height: px2rem(38);
+            margin-top: px2rem(16);
+            color: #393939;
+          }
+          .price{
+            color: #ff6c00;
+            font-size: px2rem(24);
+            font-weight: bold;
+            margin-top: px2rem(50);
+            span{
+              font-size: px2rem(34);
+              vertical-align: bottom;
+            }
+          }
           .btn{
             width: px2rem(59);
             height: px2rem(59);
+            position: absolute;
+            bottom: px2rem(54);
+            right: px2rem(24);
             img{
               width: 100%;
               height: 100%;
             }
           }
-          .des{
+          .info-bottom{
             font-size: px2rem(22);
             line-height: px2rem(36);
             color: #9c9c9c;
           }
-          .van-card{
-            background-color: #fff;
+          .border{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-bottom: 1px solid #ececec;
           }
         }
+      }
     }
   }
 </style>
@@ -77,16 +119,14 @@
           <div class="time-box">2019-06-16</div>
           <div class="goodsList">
             <div class="wrapper">
-              <van-card
-                price="2.00"
-                title="PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖"
-                :thumb="images[0]"
-                origin-price="10.00"
-              >
-                <div class="des" slot="bottom">
-                  已售1389/剩2000
-                </div>
-              </van-card>
+              <div class="img-box"><img src="../images/icon3.png" alt=""></div>
+              <div class="right-box">
+                <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
+                <div class="des"></div>
+                <div class="price">￥<span>599.00</span></div>
+                <div class="info-bottom">已售1389/剩2000</div>
+                <div class="border"></div>
+              </div>
             </div>
           </div>
         </van-tab>
@@ -96,16 +136,14 @@
             <div class="time-box">2019-06-16</div>
             <div class="goodsList">
               <div class="wrapper">
-                <van-card
-                  price="2.00"
-                  title="PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖PZAAO 中空缎面款色休闲短袖"
-                  :thumb="images[0]"
-                  origin-price="10.00"
-                >
-                  <div class="des" slot="bottom">
-                    已售1389/剩2000
-                  </div>
-                </van-card>
+                <div class="img-box"><img src="../images/icon3.png" alt=""></div>
+                <div class="right-box">
+                  <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
+                  <div class="des"></div>
+                  <div class="price">￥<span>599.00</span></div>
+                  <div class="info-bottom">已售1389/剩2000</div>
+                  <div class="border"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -122,7 +160,6 @@
     </van-popup>
   </div>
 </template>
-
 <script>
 import { Toast } from 'vant'
 import tabbar from '../components/tabbar'
@@ -152,15 +189,15 @@ export default {
         message: '加载中...'
       })
     },
-    timeConfirm(value) {
+    timeConfirm (value) {
       console.log(value)
       var month = value.getMonth() + 1
       var strDate = value.getDate()
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate
       }
       this.time = value.getFullYear() + '-' + month + '-' + strDate
       this.showPop = false
@@ -173,4 +210,3 @@ export default {
   }
 }
 </script>
-

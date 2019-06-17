@@ -271,7 +271,7 @@
         </div>
       </div>
       <div class="listbox">
-        <div class="wrapper">
+        <div class="wrapper" @click="goDetail(1)">
           <div class="img-box"><img src="../images/icon3.png" alt=""></div>
           <div class="right-box">
             <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
@@ -322,6 +322,14 @@ export default {
       Toast.loading({
         mask: true,
         message: '加载中...'
+      })
+    },
+    goDetail (id) {
+      this.$router.push({
+        name: 'detailPage',
+        params: {
+          id: id
+        }
       })
     }
   },

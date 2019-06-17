@@ -84,7 +84,7 @@
       </div>
     </div>
     <div class="area-2">
-      <div class="wrapper">
+      <div class="wrapper" @click="go(1)">
         <div class="left-box">
           <img src="../images/icon4.png" alt="">
           <div class="name">我的仓库</div>
@@ -93,7 +93,7 @@
           <img src="../images/icon7.png" alt="">
         </div>
       </div>
-      <div class="wrapper">
+      <div class="wrapper" @click="go(2)">
         <div class="left-box">
           <img src="../images/icon5.png" alt="">
           <div class="name">我的消息</div>
@@ -125,6 +125,17 @@ export default {
         mask: true,
         message: '加载中...'
       })
+    },
+    go (status) {
+      if (status === 1) {
+        this.$router.push({
+          path: '/myWarehouse'
+        })
+      } else if (status === 2) {
+        this.$router.push({
+          path: '/myInfo'
+        })
+      }
     }
   },
   mounted () {

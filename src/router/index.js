@@ -5,6 +5,7 @@ import Home from '@/pages/home'
 import MyCenter from '@/pages/myCenter'
 import MyInfo from '@/pages/myInfo'
 import MyWarehouse from '@/pages/myWarehouse'
+import DetailPage from '@/pages/detailPage'
 
 Vue.use(Router)
 
@@ -37,6 +38,14 @@ export default new Router({
     path: '/myWarehouse',
     name: 'myWarehouse',
     component: MyWarehouse,
+    meta: {
+      keepAlive: true,
+      isBack: false
+    }
+  }, {
+    path: '/detailPage',
+    name: 'detailPage',
+    component: DetailPage,
     meta: {
       keepAlive: true,
       isBack: false

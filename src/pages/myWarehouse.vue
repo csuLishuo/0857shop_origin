@@ -36,10 +36,24 @@
       }
       .time-select-box{
         background: #f2f2f2;
-        line-height: px2rem(82);
+        /*line-height: px2rem(82);*/
+        height: px2rem(82);
         font-size: px2rem(26);
         color: #707070;
         text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span{
+          display: inline-block;
+          width: px2rem(14);
+          height: px2rem(9);
+          margin-left: px2rem(20);
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
       }
       .goodsList{
         .wrapper{
@@ -133,7 +147,7 @@
           </div>
         </van-tab>
         <van-tab title="标签 2">
-          <div class="time-select-box">{{time?time:'选择时间'}}<span></span></div>
+          <div class="time-select-box" @click="showPopFun">{{time?time:'选择时间'}}<span><img src="../images/icon11.png" alt=""></span></div>
           <div>
             <div class="time-box">2019-06-16</div>
             <div class="goodsList">
@@ -156,7 +170,7 @@
       <van-datetime-picker
         v-model="currentDate"
         type="date"
-        :max-date="currentDate"
+        :max-date="maxData"
         @confirm="timeConfirm"
       />
     </van-popup>
@@ -173,13 +187,14 @@ export default {
   },
   data () {
     return {
-      active: 1,
+      active: 0,
       images: [
         require('../images/icon1.png'),
         require('../images/icon1_on.png'),
         require('../images/icon2.png')
       ],
-      showPop: true,
+      showPop: false,
+      maxData: new Date(),
       currentDate: new Date(),
       time: ''
     }
@@ -206,6 +221,9 @@ export default {
     },
     goBack () {
       this.$router.back(-1)
+    },
+    showPopFun () {
+      this.showPop = true
     }
   },
   mounted () {

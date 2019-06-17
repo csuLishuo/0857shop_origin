@@ -79,7 +79,7 @@
     <div class="area-2">
       <div class="wrapper">
         <div class="img-box">
-          <img src="../images/icon2.png" alt="">
+          <img src="../images/icon10.png" alt="">
         </div>
         <div class="text-box">
           <div class="title">平台通知</div>

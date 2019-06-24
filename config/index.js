@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/proxy': {
-        target: 'http://smart.test.com',
+        target: 'http://clearbye.natapp1.cc',
         changeOrigin: true,
         pathRewrite: {
           '^/proxy': ''

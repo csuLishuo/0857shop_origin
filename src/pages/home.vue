@@ -114,6 +114,7 @@
           position: relative;
           &.on{
             color: #000000;
+            font-weight: bold;
           }
         }
       }
@@ -230,44 +231,9 @@
         <div class="item on">
           热门
         </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
-        </div>
-        <div class="item">
-          热门
+        {{categoryList[0].chname}}
+        <div class="item" v-for="item in categoryList" :key="item.id">
+          {{item.chname}}
         </div>
       </div>
       <div class="listbox">
@@ -314,14 +280,37 @@ export default {
         require('../images/icon1.png'),
         require('../images/icon1_on.png'),
         require('../images/icon2.png')
-      ]
+      ],
+      categoryList: [],
+      sendData: {
+        categoryId: 0,
+        title: ''
+      }
     }
   },
   methods: {
-    test () {
-      Toast.loading({
-        mask: true,
-        message: '加载中...'
+    getGoodsCategory () {
+      this.$post('/api/goods/getGoodsCategoryByLevel', {
+        level: 1
+      }).then(res => {
+        if (res.result === 0) {
+          this.categoryList = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    getGoodsList () {
+      this.$post('/api/goods/getGoodsListByCategoryId', this.sendData).then(res => {
+        if (res.result === 0) {
+          this.categoryList = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
       })
     },
     goDetail (id) {
@@ -331,10 +320,14 @@ export default {
           id: id
         }
       })
+    },
+    init () {
+      this.getGoodsCategory()
+      this.getGoodsList()
     }
   },
   mounted () {
-    // this.test()
+    this.init()
   },
   watch: {
   }

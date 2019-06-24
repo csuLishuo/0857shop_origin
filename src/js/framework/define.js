@@ -7,8 +7,8 @@ var SERVER_BAS_URL = process.env.API_URL
 
 var REQUESTDATA = {
   "api_version": '2.0.2',
-  "appkey": "b694b7cb8fb707fc",
-  "appsecret": "7c1143beb2f63ff8ca436d1cd87ea92d"
+  // "appkey": "b694b7cb8fb707fc",
+  // "appsecret": "7c1143beb2f63ff8ca436d1cd87ea92d"
 };
 /*
  * 日志级别配置

@@ -813,7 +813,7 @@ var lf = (function (document) {
      * @param {Object} data 参数
      * @param {Function} successBC 上传成功回调函数
      */
-    upload: function (url, data, params, success, error, uploadProgress, uploadComplete, uploadFailed, uploadCanceled) {
+    upload: function (url, data, param, success, error, uploadProgress, uploadComplete, uploadFailed, uploadCanceled) {
       if (!$.util.isFormData(data)) {
         var formData = new FormData()
         if ($.util.isObject(data)) {
@@ -829,12 +829,12 @@ var lf = (function (document) {
           return
         }
       }
-      params.uid = lf.cookie.get('uid')
-      params.auth_sign = lf.cookie.get('token')
+      param.uid = lf.cookie.get('uid')
+      // param.auth_sign = lf.cookie.get('token')
       var tempData = {
         appkey: REQUESTDATA.appkey,
         // api_version: REQUESTDATA.api_version,
-        params: JSON.stringify(params)
+        param: JSON.stringify(param)
       }
       tempData = filter(tempData)
       sign(tempData)
@@ -910,11 +910,11 @@ var lf = (function (document) {
     // if (!config.data.uid) {
       // config.data.uid = lf.cookie.get('userId')
     // }
-    config.data.auth_sign = lf.cookie.get('token')
+    // config.data.auth_sign = lf.cookie.get('token')
     var tempData = {
       appkey: REQUESTDATA.appkey,
       // api_version: REQUESTDATA.api_version,
-      params: JSON.stringify(config.data)
+      param: JSON.stringify(config.data)
     }
     var data = tempData
 

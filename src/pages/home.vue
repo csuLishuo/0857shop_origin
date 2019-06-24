@@ -267,6 +267,7 @@
 
 <script>
 import { Toast } from 'vant'
+import axios from 'axios'
 import tabbar from '../components/tabbar'
 
 export default {
@@ -284,7 +285,9 @@ export default {
       categoryList: [],
       sendData: {
         categoryId: 0,
-        title: ''
+        title: '',
+        pageNumber: 1,
+        pageSize: 10
       }
     }
   },
@@ -321,12 +324,28 @@ export default {
         }
       })
     },
+    login () {
+      this.$post('/api/login/logins', {
+        userName: 'test',
+        password: '123456'
+      }).then(res => {
+        console.log(res.headers)
+        if (res.result === 0) {
+          this.categoryList = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
     init () {
       this.getGoodsCategory()
       this.getGoodsList()
     }
   },
   mounted () {
+    // this.login()
     this.init()
   },
   watch: {

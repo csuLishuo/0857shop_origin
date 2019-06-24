@@ -5,7 +5,25 @@
 import qs from 'qs'
 import axios from 'axios'
 import {SERVER_BAS_URL, REQUESTDATA, debug, PROJECT_NAME} from './define'
+//POST传参序列化(请求拦截器)
+axios.interceptors.request.use((config) => {
+  //在发送请求之前做某件事
+  if(config.method  === 'post'){
+    if (sessionStorage.getItem("Jwt")) {
+      config.headers.common['Jwt'] = sessionStorage.getItem("Jwt")
+    }
+  }
+  return config
+})
 
+//返回状态判断(响应拦截器)
+axios.interceptors.response.use((res) =>{
+  if(res.headers.jwt!=null){
+    sessionStorage.setItem("Jwt",res.headers.jwt)
+  }
+
+  return res;
+});
 /**
  * lf核心JS
  * @type _L4.$|Function
@@ -802,7 +820,7 @@ var lf = (function (document) {
     }
     str += REQUESTDATA.appsecret
     var sign = lf.hex_md5(str)
-    data.sign = sign
+    // data.sign = sign
   }
 
   $.net = {
@@ -906,6 +924,7 @@ var lf = (function (document) {
   axios.defaults.timeout = 10000
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   axios.defaults.headers.post['crossDomain'] = true
+  // axios.defaults.headers.post['jwt'] = 'eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjEzNDY5MDcsInN1YiI6IntcInVzZXJcIjp7XCJhZ2VudElkXCI6XCIwXCIsXCJhdmF0YXJcIjpcIlwiLFwiYmlydGhkYXlcIjpcIjAyLTE4XCIsXCJjcmVhdGVUaW1lXCI6XCIyMDE5LTA2LTE4IDE1OjMyOjUzXCIsXCJlbWFpbFwiOlwiMTk0NTA5MzUwMkBxcS5jb21cIixcImZhaWxDb3VudFwiOjAsXCJnZW5kZXJcIjowLFwiaWRcIjoxLFwiaXNCdXNpbmVzc0NvbGxhZ2VcIjowLFwibG9ja1RpbWVcIjpcIjIwMTktMDYtMTcgMTU6MzI6NDRcIixcIm1vYmlsZVBob25lXCI6XCIxODg4ODg4ODg4OFwiLFwibmlja05hbWVcIjpcIua1i-ivlVwiLFwicGFzc3dvcmRcIjpcIjdjNGMyYmYzMzhhYzk0ZmIwMmYzZTkxZDg2NGYwN2I3XCIsXCJyZWFsTmFtZVwiOlwi5rWL6K-VXCIsXCJyZWZlcmVlXCI6XCIxXCIsXCJyZWZlcmVlSWRcIjowLFwicmVtYXJrXCI6XCLmtYvor5VcIixcInNhbHRcIjpcImE3Njc2ZTRjYjJmYzQ2NDg4NjQ0YjMzNTBkZDdhMTQ5XCIsXCJzdGF0dXNcIjoxLFwidGVhbU5hbWVcIjpcIua1i-ivlVwiLFwidXBkYXRlVGltZVwiOlwiMjAxOS0wNi0xOCAxNTozNDoxMVwiLFwidXNlckxldmVsXCI6XCLmma7pgJrkvJrlkZhcIixcInVzZXJMZXZlbElkXCI6MSxcInVzZXJOYW1lXCI6XCJ0ZXN0XCIsXCJ1c2VyVHlwZVwiOjIsXCJ2aXNpdFRva2VuXCI6XCJkMmU5NWEzN2M1MjA0MzYzOTI3NjYyOGQyYTA1MWRhYlwifX0iLCJleHAiOjE1NjE5NTE3MDd9.wmGXmhHRVUwctSjddJMToP80zq3vKMLxW6-mH4ciBQk'
   axios.interceptors.request.use(function (config) {
     // if (!config.data.uid) {
       // config.data.uid = lf.cookie.get('userId')

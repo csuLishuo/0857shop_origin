@@ -67,9 +67,12 @@
           .img-box{
             width: px2rem(295);
             height: px2rem(259);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             img{
-              width: 100%;
-              height: 100%;
+              max-width: 100%;
+              max-height: 100%;
             }
           }
           .right-box{
@@ -117,6 +120,22 @@
             }
           }
         }
+        .del-good {
+          width: 70px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background: #ff0000;
+          color: #ffffff;
+          font-size: px2rem(28);
+          height: 100%;
+          img{
+            width: px2rem(39);
+            height: px2rem(41);
+            margin-top: px2rem(22);
+          }
+        }
       }
     }
   }
@@ -131,22 +150,32 @@
     </div>
     <div class="tabs">
       <van-tabs v-model="active">
-        <van-tab title="标签 1">
+        <van-tab title="新进仓库">
           <div class="time-box">2019-06-16</div>
           <div class="goodsList">
-            <div class="wrapper">
-              <div class="img-box"><img src="../images/icon3.png" alt=""></div>
-              <div class="right-box">
-                <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
-                <div class="des"></div>
-                <div class="price">￥<span>599.00</span></div>
-                <div class="info-bottom">已售1389/剩2000</div>
-                <div class="border"></div>
-              </div>
+            <div v-for="(item, index) in goodsList" :key="item.id">
+              <van-swipe-cell
+                :right-width="70"
+              >
+                <div class="wrapper">
+                  <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
+                  <div class="right-box">
+                    <div class="title ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
+                    <div class="des"></div>
+                    <div class="price">￥<span>{{item.nowPrice}}</span></div>
+                    <div class="info-bottom">已售{{item.totalSales}}/剩{{JSON.parse(item.attrs)[0].stock}}</div>
+                    <div class="border"></div>
+                  </div>
+                </div>
+                <div slot="right" class="del-good" @click="delGood(item.id, index)">
+                  <span>删除</span>
+                  <img src="../images/icon01.png">
+                </div>
+              </van-swipe-cell>
             </div>
           </div>
         </van-tab>
-        <van-tab title="标签 2">
+        <van-tab title="历史货物">
           <div class="time-select-box" @click="showPopFun">{{time?time:'选择时间'}}<span><img src="../images/icon11.png" alt=""></span></div>
           <div>
             <div class="time-box">2019-06-16</div>
@@ -178,12 +207,10 @@
 </template>
 <script>
 import { Toast } from 'vant'
-import tabbar from '../components/tabbar'
 
 export default {
   name: 'myCenter',
   components: {
-    tabbar
   },
   data () {
     return {
@@ -196,7 +223,16 @@ export default {
       showPop: false,
       maxData: new Date(),
       currentDate: new Date(),
-      time: ''
+      time: '',
+      nowTime: '',
+      sendData: {
+        pageNumber: 1,
+        pageSize: 10,
+        dataTime: ''
+        // dataTime: '2019-06-25'
+      },
+      filePath: '',
+      goodsList: []
     }
   },
   methods: {
@@ -204,6 +240,47 @@ export default {
       Toast.loading({
         mask: true,
         message: '加载中...'
+      })
+    },
+    removeArrayItem (arr, i) {
+      if (isNaN(i) || i > arr.length) {
+        return false
+      }
+      for (var m = 0, n = 0; m < arr.length; m++) {
+        if (arr[m] !== arr[i]) {
+          arr[n++] = arr[m]
+        }
+      }
+      arr.length -= 1
+    },
+    delGood (id, index) {
+      this.$post('/api/goods/delGoodsPoxy', {
+        id: id
+      }).then(res => {
+        if (res.result === 0) {
+          Toast.success(res.message)
+          this.goodsList.splice(index, 1)
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
+    getGoodsList () {
+      this.$post('/api/goods/getGoodsPoxyList', this.sendData).then(res => {
+        if (res.result === 0) {
+          if (this.sendData.pageNumber === 1) {
+            this.goodsList = res.data.list
+          } else {
+            this.goodsList.push(res.data.list)
+          }
+          this.filePath = res.filePath
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
       })
     },
     timeConfirm (value) {
@@ -219,17 +296,34 @@ export default {
       this.time = value.getFullYear() + '-' + month + '-' + strDate
       this.showPop = false
     },
+    getNowTime () {
+      let now = new Date()
+      var month = now.getMonth() + 1
+      var strDate = now.getDate()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      this.sendData.dataTime = now.getFullYear() + '-' + month + '-' + strDate
+    },
     goBack () {
       this.$router.back(-1)
     },
     showPopFun () {
       this.showPop = true
+    },
+    init () {
+      this.getNowTime()
+      this.getGoodsList()
     }
   },
   mounted () {
     // this.test()
   },
   created () {
+    this.init()
   },
   watch: {
   }

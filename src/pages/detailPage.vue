@@ -95,27 +95,27 @@
   <div class="detailPage-container">
     <div class="banner">
       <van-swipe :autoplay="3000">
-        <van-swipe-item v-for="(image, index) in images" :key="index">
-          <img :src="image" />
+        <van-swipe-item v-for="(image, index) in detailData.pics.split(';')" :key="index">
+          <img :src="filePath + image" />
         </van-swipe-item>
       </van-swipe>
     </div>
     <div class="price-box">
-      <div class="price">￥<span>599.00</span></div>
-      <div class="info">已售1389/剩2000</div>
+      <div class="price">￥<span>{{detailData.nowPrice}}</span></div>
+      <div class="info">已售{{detailData.totalSales}}/剩{{JSON.parse(detailData.attrs)[0].stock}}</div>
     </div>
-    <div class="title ellipsis-2">【同价618】旗舰店 卡西欧（CASIO）樱花色新 款女表时尚防水运动学生表BGD-560</div>
+    <div class="title ellipsis-2">【{{detailData.title}}】{{detailData.subtitle}}</div>
     <div class="area-2">
       <div class="area-2-title">
         <div class="border"></div>
         <div class="name">详情介绍</div>
         <div class="border"></div>
       </div>
-      <div class="img-box">
-        <img src="../images/img1.png" alt="">
+      <div class="img-box" v-for="(image, index) in detailData.details.split(';')" :key="index">
+        <img :src="filePath + image" alt="">
       </div>
     </div>
-    <div class="btn-bottom">加入仓库</div>
+    <div class="btn-bottom" @click="addToWarehouse">加入仓库</div>
   </div>
 </template>
 <script>
@@ -127,13 +127,8 @@ export default {
   },
   data () {
     return {
-      images: [
-        require('../images/icon1.png'),
-        require('../images/icon1_on.png'),
-        require('../images/img1.png'),
-        require('../images/icon3.png')
-      ],
-      detailId: ''
+      detailData: '',
+      filePath: ''
     }
   },
   methods: {
@@ -142,14 +137,28 @@ export default {
         mask: true,
         message: '加载中...'
       })
+    },
+    addToWarehouse () {
+      this.$post('/api/goods/insertGoodsPoxy', {
+        goodsId: this.detailData.id
+      }).then(res => {
+        if (res.result === 0) {
+          Toast.success(res.message)
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
     }
   },
   mounted () {
     // this.test()
   },
   created () {
-    this.detailId = this.$route.params.id
-    console.log('detailId', this.detailId)
+    this.detailData = JSON.parse(this.$route.params.item)
+    this.filePath = this.$route.params.filePath
+    console.log('detailData', this.detailData)
   },
   watch: {
   }

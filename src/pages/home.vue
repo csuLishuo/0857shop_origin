@@ -130,9 +130,12 @@
           .img-box{
             width: px2rem(295);
             height: px2rem(259);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             img{
-              width: 100%;
-              height: 100%;
+              max-width: 100%;
+              max-height: 100%;
             }
           }
           .right-box{
@@ -231,34 +234,29 @@
         <div class="item on">
           热门
         </div>
-        {{categoryList[0].chname}}
-        <div class="item" v-for="item in categoryList" :key="item.id">
+        <div class="item" v-for="item in categoryList" :key="item.id" @click="changeCate(item.id)">
           {{item.chname}}
         </div>
       </div>
       <div class="listbox">
-        <div class="wrapper" @click="goDetail(1)">
-          <div class="img-box"><img src="../images/icon3.png" alt=""></div>
-          <div class="right-box">
-            <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
-            <div class="des"></div>
-            <div class="price">￥<span>599.00</span></div>
-            <div class="info-bottom">已售1389/剩2000</div>
-            <div class="btn"><img src="../images/icon3.png" alt=""></div>
-            <div class="border"></div>
+        <van-list
+          v-model="loadingList"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="getOneMorePage"
+        >
+          <div class="wrapper" v-for="item in goodsList" :key="item.id" @click="goDetail(item)">
+            <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
+            <div class="right-box">
+              <div class="title ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
+              <div class="des"></div>
+              <div class="price">￥<span>{{item.nowPrice}}</span></div>
+              <div class="info-bottom">已售{{item.totalSales}}/剩{{JSON.parse(item.attrs)[0].stock}}</div>
+              <div class="btn"><img src="../images/icon3.png" alt=""></div>
+              <div class="border"></div>
+            </div>
           </div>
-        </div>
-        <div class="wrapper">
-          <div class="img-box"><img src="../images/icon3.png" alt=""></div>
-          <div class="right-box">
-            <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
-            <div class="des"></div>
-            <div class="price">￥<span>599.00</span></div>
-            <div class="info-bottom">已售1389/剩2000</div>
-            <div class="btn"><img src="../images/icon3.png" alt=""></div>
-            <div class="border"></div>
-          </div>
-        </div>
+        </van-list>
       </div>
     </div>
     <tabbar :activeIndex="0"></tabbar>
@@ -267,7 +265,6 @@
 
 <script>
 import { Toast } from 'vant'
-import axios from 'axios'
 import tabbar from '../components/tabbar'
 
 export default {
@@ -283,15 +280,54 @@ export default {
         require('../images/icon2.png')
       ],
       categoryList: [],
+      goodsList: [],
+      filePath: '',
+      total: '',
       sendData: {
         categoryId: 0,
         title: '',
         pageNumber: 1,
-        pageSize: 10
-      }
+        pageSize: 5
+      },
+      loadingList: false,
+      finished: false
     }
   },
   methods: {
+    changeCate (id) {
+      this.sendData.pageNumber = 1
+      this.goodsList = []
+      this.sendData.categoryId = id
+      this.getGoodsList()
+    },
+    getOneMorePage () {
+      console.log('this.sendData.pageNumber', this.sendData.pageNumber)
+      setTimeout(() => {
+        console.log('this.sendData.pageNumber1', this.sendData.pageNumber)
+        this.sendData.pageNumber++
+        this.getGoodsList()
+        // 加载状态结束
+        this.loading = false
+
+        // 数据全部加载完成
+        if (this.goodsList.length >= Number(this.total)) {
+          this.finished = true
+        }
+      }, 500)
+    },
+    addToWarehouse (id) {
+      this.$post('/api/goods/insertGoodsPoxy', {
+        goodsId: id
+      }).then(res => {
+        if (res.result === 0) {
+          Toast.success(res.message)
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
     getGoodsCategory () {
       this.$post('/api/goods/getGoodsCategoryByLevel', {
         level: 1
@@ -308,7 +344,14 @@ export default {
     getGoodsList () {
       this.$post('/api/goods/getGoodsListByCategoryId', this.sendData).then(res => {
         if (res.result === 0) {
-          this.categoryList = res.data
+          if (this.sendData.pageNumber === 1) {
+            this.goodsList = res.data.list
+          } else {
+            this.goodsList = this.goodsList.concat(res.data.list)
+          }
+          this.filePath = res.filePath
+          this.total = res.data.totalCount
+          console.log('this.goodsList', this.goodsList)
         } else {
           Toast.fail(res.message)
         }
@@ -316,11 +359,12 @@ export default {
         Toast.fail('系统内部错误')
       })
     },
-    goDetail (id) {
+    goDetail (item) {
       this.$router.push({
         name: 'detailPage',
         params: {
-          id: id
+          item: JSON.stringify(item),
+          filePath: this.filePath
         }
       })
     },
@@ -329,12 +373,6 @@ export default {
         userName: 'test',
         password: '123456'
       }).then(res => {
-        console.log(res.headers)
-        if (res.result === 0) {
-          this.categoryList = res.data
-        } else {
-          Toast.fail(res.message)
-        }
       }).catch(res => {
         Toast.fail('系统内部错误')
       })

@@ -15,7 +15,6 @@ axios.interceptors.request.use((config) => {
   }
   return config
 })
-
 //返回状态判断(响应拦截器)
 axios.interceptors.response.use((res) =>{
   if(res.headers.jwt!=null){

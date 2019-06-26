@@ -1,4 +1,4 @@
-<style lang="scss" scoped>
+<style lang="scss">
   @function px2rem($px) {
     //$px为需要转换的字号
     @return $px * 1 / 100 * 1rem;
@@ -14,15 +14,25 @@
         height: 100%;
       }
     }
+    .van-swipe-item{
+      height: px2rem(268) !important;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
     .search-box{
-        background: #fff;
-        padding: px2rem(10) px2rem(30);
+      background: #fff;
+      padding: px2rem(10) px2rem(30);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       .input-box{
         background: #eee;
         border-radius: px2rem(29);
         padding-left: px2rem(50);
         height: px2rem(58);
-        width: 100%;
+        width: 90%;
         position: relative;
         overflow: hidden;
         img{
@@ -38,6 +48,10 @@
           font-size: px2rem(25);
           background: transparent;
         }
+      }
+      .btn{
+        font-size: px2rem(26);
+        color: #666;
       }
     }
     .fixed-box{
@@ -208,15 +222,21 @@
 <template>
   <div class="home-container">
     <div class="banner">
-      <img src="../images/icon1.png" alt="">
+      <van-swipe :autoplay="3000">
+        <van-swipe-item v-for="(item, index) in bannerData" :key="index">
+          <img :src="filePath + item.bannerPic" alt="">
+        </van-swipe-item>
+      </van-swipe>
     </div>
     <div class="search-box">
       <div class="input-box">
         <img src="../images/icon6.png" alt="">
-        <input type="text">
+        <input type="text" v-model="sendData.title">
       </div>
+      <div class="btn" @click="search">搜索</div>
     </div>
-    <div class="fixed-box">
+    <!--我的仓库，回到顶部-->
+    <!--<div class="fixed-box">
       <div class="wrapper wrapper-1">
         <div class="img-box">
           <img src="../images/icon8.png" alt="">
@@ -228,13 +248,13 @@
           <img src="../images/icon9.png" alt="">
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="area-3">
       <div class="scroll-box">
-        <div class="item on">
+        <div class="item" :class="{'on':sendData.categoryId == 0}" @click="changeCate(0)">
           热门
         </div>
-        <div class="item" v-for="item in categoryList" :key="item.id" @click="changeCate(item.id)">
+        <div class="item" :class="{'on':sendData.categoryId == item.id}" v-for="item in categoryList" :key="item.id" @click="changeCate(item.id)">
           {{item.chname}}
         </div>
       </div>
@@ -242,6 +262,7 @@
         <van-list
           v-model="loadingList"
           :finished="finished"
+          :immediate-check="false"
           finished-text="没有更多了"
           @load="getOneMorePage"
         >
@@ -290,29 +311,41 @@ export default {
         pageSize: 5
       },
       loadingList: false,
-      finished: false
+      finished: false,
+      bannerData: []
     }
   },
   methods: {
     changeCate (id) {
       this.sendData.pageNumber = 1
+      this.finished = false
       this.goodsList = []
       this.sendData.categoryId = id
       this.getGoodsList()
     },
+    search () {
+      this.finished = false
+      this.sendData.pageNumber = 1
+      this.goodsList = []
+      this.getGoodsList()
+    },
+    getBannerList () {
+      this.$post('/api/banner/getBannerListByBannerType', {
+        bannerType: 1
+      }).then(res => {
+        if (res.result === 0) {
+          this.bannerData = res.data
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
+    },
     getOneMorePage () {
-      console.log('this.sendData.pageNumber', this.sendData.pageNumber)
       setTimeout(() => {
-        console.log('this.sendData.pageNumber1', this.sendData.pageNumber)
         this.sendData.pageNumber++
         this.getGoodsList()
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.goodsList.length >= Number(this.total)) {
-          this.finished = true
-        }
       }, 500)
     },
     addToWarehouse (id) {
@@ -351,7 +384,12 @@ export default {
           }
           this.filePath = res.filePath
           this.total = res.data.totalCount
-          console.log('this.goodsList', this.goodsList)
+          // 加载状态结束
+          this.loadingList = false
+          // 数据全部加载完成
+          if (this.goodsList.length >= Number(this.total)) {
+            this.finished = true
+          }
         } else {
           Toast.fail(res.message)
         }
@@ -368,22 +406,13 @@ export default {
         }
       })
     },
-    login () {
-      this.$post('/api/login/logins', {
-        userName: 'test',
-        password: '123456'
-      }).then(res => {
-      }).catch(res => {
-        Toast.fail('系统内部错误')
-      })
-    },
     init () {
+      this.getBannerList()
       this.getGoodsCategory()
       this.getGoodsList()
     }
   },
   mounted () {
-    // this.login()
     this.init()
   },
   watch: {

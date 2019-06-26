@@ -6,6 +6,8 @@ import MyCenter from '@/pages/myCenter'
 import MyInfo from '@/pages/myInfo'
 import MyWarehouse from '@/pages/myWarehouse'
 import DetailPage from '@/pages/detailPage'
+import Login from '@/pages/login'
+import Register from '@/pages/register'
 
 Vue.use(Router)
 
@@ -48,6 +50,22 @@ export default new Router({
     component: DetailPage,
     meta: {
       keepAlive: true,
+      isBack: false
+    }
+  }, {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {
+      keepAlive: false,
+      isBack: false
+    }
+  }, {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    meta: {
+      keepAlive: false,
       isBack: false
     }
   }]

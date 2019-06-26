@@ -137,6 +137,12 @@
           }
         }
       }
+      .noData{
+        font-size: px2rem(32);
+        color: #666;
+        text-align: center;
+        margin-top: px2rem(50);
+      }
     }
   }
 </style>
@@ -149,51 +155,48 @@
       <div class="title">我的仓库</div>
     </div>
     <div class="tabs">
-      <van-tabs v-model="active">
+      <van-tabs v-model="active" @click="changeTab">
         <van-tab title="新进仓库">
-          <div class="time-box">2019-06-16</div>
-          <div class="goodsList">
-            <div v-for="(item, index) in goodsList" :key="item.id">
-              <van-swipe-cell
-                :right-width="70"
-              >
-                <div class="wrapper">
-                  <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
-                  <div class="right-box">
-                    <div class="title ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
-                    <div class="des"></div>
-                    <div class="price">￥<span>{{item.nowPrice}}</span></div>
-                    <div class="info-bottom">已售{{item.totalSales}}/剩{{JSON.parse(item.attrs)[0].stock}}</div>
-                    <div class="border"></div>
-                  </div>
-                </div>
-                <div slot="right" class="del-good" @click="delGood(item.id, index)">
-                  <span>删除</span>
-                  <img src="../images/icon01.png">
-                </div>
-              </van-swipe-cell>
-            </div>
-          </div>
+          <div class="time-box">{{sendData.dateTime}}</div>
         </van-tab>
         <van-tab title="历史货物">
-          <div class="time-select-box" @click="showPopFun">{{time?time:'选择时间'}}<span><img src="../images/icon11.png" alt=""></span></div>
+          <div class="time-select-box" @click="showPopFun">{{sendData.dateTime?sendData.dateTime:'选择时间'}}<span><img src="../images/icon11.png" alt=""></span></div>
           <div>
-            <div class="time-box">2019-06-16</div>
-            <div class="goodsList">
-              <div class="wrapper">
-                <div class="img-box"><img src="../images/icon3.png" alt=""></div>
-                <div class="right-box">
-                  <div class="title ellipsis-2">【立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g立体小脸妆出来】RIRE双头阴影高光修容棒3g+3g</div>
-                  <div class="des"></div>
-                  <div class="price">￥<span>599.00</span></div>
-                  <div class="info-bottom">已售1389/剩2000</div>
-                  <div class="border"></div>
-                </div>
-              </div>
-            </div>
+            <div class="time-box">{{sendData.dateTime}}</div>
           </div>
         </van-tab>
       </van-tabs>
+      <div class="goodsList" v-if="goodsList.length>0">
+        <van-list
+          v-model="loadingList"
+          :finished="finished"
+          :immediate-check="false"
+          finished-text="没有更多了"
+          @load="getOneMorePage"
+        >
+          <div v-for="(item, index) in goodsList" :key="item.id">
+            <van-swipe-cell
+              :right-width="70"
+            >
+              <div class="wrapper">
+                <div class="img-box"><img :src="filePath + item.pics.split(';')[0]" alt=""></div>
+                <div class="right-box">
+                  <div class="title ellipsis-2">【{{item.title}}】{{item.subTitle}}</div>
+                  <div class="des"></div>
+                  <div class="price">￥<span>{{item.nowPrice}}</span></div>
+                  <div class="info-bottom">已售{{item.totalSales}}/剩{{JSON.parse(item.attrs)[0].stock}}</div>
+                  <div class="border"></div>
+                </div>
+              </div>
+              <div slot="right" class="del-good" @click="delGood(item.id, index)">
+                <span>删除</span>
+                <img src="../images/icon01.png">
+              </div>
+            </van-swipe-cell>
+          </div>
+        </van-list>
+      </div>
+      <div class="noData" v-if="goodsList.length==0">暂无数据</div>
     </div>
     <van-popup v-model="showPop" position="bottom">
       <van-datetime-picker
@@ -209,7 +212,7 @@
 import { Toast } from 'vant'
 
 export default {
-  name: 'myCenter',
+  name: 'myWarehouse',
   components: {
   },
   data () {
@@ -228,14 +231,30 @@ export default {
       sendData: {
         pageNumber: 1,
         pageSize: 10,
-        dataTime: ''
-        // dataTime: '2019-06-25'
+        dateTime: ''
+        // dateTime: '2019-06-25'
       },
       filePath: '',
-      goodsList: []
+      goodsList: [],
+      loadingList: false,
+      finished: false
     }
   },
   methods: {
+    changeTab (index) {
+      if (index === 0) {
+        this.init()
+      } else {
+        this.sendData.dateTime = ''
+        this.getGoodsList()
+      }
+    },
+    getOneMorePage () {
+      setTimeout(() => {
+        this.sendData.pageNumber++
+        this.getGoodsList()
+      }, 500)
+    },
     test () {
       Toast.loading({
         mask: true,
@@ -276,6 +295,13 @@ export default {
             this.goodsList.push(res.data.list)
           }
           this.filePath = res.filePath
+          this.total = res.data.totalCount
+          // 加载状态结束
+          this.loadingList = false
+          // 数据全部加载完成
+          if (this.goodsList.length >= Number(this.total)) {
+            this.finished = true
+          }
         } else {
           Toast.fail(res.message)
         }
@@ -294,6 +320,8 @@ export default {
         strDate = '0' + strDate
       }
       this.time = value.getFullYear() + '-' + month + '-' + strDate
+      this.sendData.dateTime = this.time
+      this.getGoodsList()
       this.showPop = false
     },
     getNowTime () {
@@ -306,7 +334,7 @@ export default {
       if (strDate >= 0 && strDate <= 9) {
         strDate = '0' + strDate
       }
-      this.sendData.dataTime = now.getFullYear() + '-' + month + '-' + strDate
+      this.sendData.dateTime = now.getFullYear() + '-' + month + '-' + strDate
     },
     goBack () {
       this.$router.back(-1)

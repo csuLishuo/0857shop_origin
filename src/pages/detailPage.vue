@@ -122,7 +122,7 @@
 import { Toast } from 'vant'
 
 export default {
-  name: 'myCenter',
+  name: 'detailPage',
   components: {
   },
   data () {

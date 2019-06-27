@@ -9,6 +9,25 @@
 </template>
 <script>
 import { Toast } from 'vant'
+function getCode (code) {
+  var locations = location + ""
+  // if (locations.indexOf('/?#/') > 0) {//处理在支付页面授权时，获取code失败
+  // locations = locations.replace('/?#/', '/#/')
+  // }
+  if (locations.indexOf("?") == -1) {
+    return "";
+  }
+  var params = locations.split("?");
+  var queryArr = params[1].split("&");
+  var queryMap = {};
+  for (var index in queryArr) {
+    var k = queryArr[index].split("=")[0];
+    var v = queryArr[index].split("=")[1];
+    queryMap[k] = v;
+  }
+
+  return queryMap[code];
+}
 export default {
   name: 'WxAuth',
 
@@ -21,14 +40,14 @@ export default {
       }).then(res => {
         if (res.result === 0) {
           localStorage.setItem('wxUserInfo', JSON.stringify(res.data))
+          let redirectUrl = sessionStorage.getItem('wxRedirectUrl')
+          this.$router.replace(redirectUrl)
         } else {
           Toast.fail(res.message)
         }
       }).catch(res => {
         Toast.fail('系统内部错误')
       })
-      let redirectUrl = sessionStorage.getItem('wxRedirectUrl')
-      this.$router.replace(redirectUrl)
     } else {
       this.$router.replace('/login')
     }

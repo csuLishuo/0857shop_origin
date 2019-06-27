@@ -79,7 +79,7 @@
           <img src="../images/icon2.png" alt="">
         </div>
         <div class="name">
-          name
+          {{wxUserInfo.nickname}}
         </div>
       </div>
     </div>
@@ -117,6 +117,7 @@ export default {
   },
   data () {
     return {
+      wxUserInfo: {}
     }
   },
   methods: {
@@ -140,6 +141,9 @@ export default {
   },
   mounted () {
     // this.test()
+  },
+  created () {
+    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
   },
   watch: {
   }

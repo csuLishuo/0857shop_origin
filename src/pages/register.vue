@@ -129,6 +129,15 @@
         >
         </van-field>
       </div>
+      <div class="line line-2">
+        <van-field
+          v-model="sendData.invitationCode"
+          type="password"
+          placeholder="请输入邀请码"
+          required
+        >
+        </van-field>
+      </div>
     </div>
     <div class="area-1">
       <van-checkbox v-model="checkedStatus" checked-color="#07c160"></van-checkbox>
@@ -150,10 +159,13 @@ export default {
         username: '',
         captcha: '',
         password: '',
-        passwordSub: ''
+        passwordSub: '',
+        invitationCode: ''
       },
       checkedStatus: false,
-      timeStatus: 60
+      timeStatus: 60,
+      orderSn: '', // 短信标识
+      wxUserInfo: {}
     }
   },
   methods: {
@@ -173,6 +185,27 @@ export default {
         Toast.fail('请阅读并同意《0857商城协议》')
         return false
       }
+      this.$post('/api/user/register', {
+        openId: this.wxUserInfo.openId,
+        nickName: this.wxUserInfo.nickName,
+        gender: this.wxUserInfo.gender,
+        mobilePhone: this.sendData.username,
+        referee: this.sendData.invitationCode,
+        password: this.sendData.password,
+        verifyCode: this.sendData.captcha,
+        orderSn: this.orderSn
+      }).then(res => {
+        if (res.result === 0) {
+          Toast.success('注册成功')
+          this.$router.push({
+            name: 'login'
+          })
+        } else {
+          Toast.fail(res.message)
+        }
+      }).catch(res => {
+        Toast.fail('系统内部错误')
+      })
     },
     getCaptcha () {
       let reg = /^1\d{10}$/
@@ -187,12 +220,25 @@ export default {
             window.clearInterval(interval)
           }
         }, 1000)
+        this.$post('/api/user/sendMessage', {
+          mobilePhone: this.sendData.username
+        }).then(res => {
+          if (res.result === 0) {
+            Toast.success('获取验证码成功')
+            this.orderSn = res.data.orderSn
+          } else {
+            Toast.fail(res.message)
+          }
+        }).catch(res => {
+          Toast.fail('系统内部错误')
+        })
       }
     }
   },
   mounted () {
   },
   created () {
+    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
   },
   watch: {
   }

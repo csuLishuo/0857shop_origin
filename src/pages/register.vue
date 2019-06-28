@@ -238,7 +238,15 @@ export default {
   mounted () {
   },
   created () {
-    this.wxUserInfo = JSON.parse(localStorage.getItem('wxUserInfo'))
+    this.wxUserInfo = {
+      openId: this.$route.query.openId,
+      nickName: this.$route.query.nickName,
+      gender: this.$route.query.gender,
+      headerImg: this.$route.query.headerImg
+    }
+    console.log('this.wxUserInfo1', this.wxUserInfo)
+    localStorage.setItem('wxUserInfo', JSON.stringify(this.wxUserInfo))
+    sessionStorage.setItem('authStatus', '1')
   },
   watch: {
   }

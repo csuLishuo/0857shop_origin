@@ -26,40 +26,19 @@ Vue.prototype._ = _
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 
-router.beforeEach((to, from, next) => {
-  to.meta.keepAlive = true
-  // if (!to.meta.isBack) {
-  //   to.meta.isBack = true
-  // }
-  next()
-})
-router.beforeEach((to, from, next) => {
-  if (!/micromessenger/i.test(navigator.userAgent)) {
-    next()
-    return
-  }
-  // 不要对 WxAuth 路由进行拦截，不进入 WxAuth 路由就拿不到微信返回的授权 code
-  if (to.name === 'WxAuth') {
-    next()
-    return
-  }
-  let wxUserInfo = localStorage.getItem('wxUserInfo')
-  if (!wxUserInfo) {
-    // 保存当前路由地址，授权后还会跳到此地址
-    sessionStorage.setItem('wxRedirectUrl', to.fullPath)
-    // 请求微信授权,并跳转到 /WxAuth 路由
-    let appId = 'wx2690a3570f2c3151'
-    let redirectUrl = encodeURIComponent('http://huoyuancheng.wurenyulecang.com/#/WxAuth')
-    // 判断是否为正式环境
-    if (window.location.origin.indexOf('http://huoyuancheng.wurenyulecang.com') !== -1) {
-      appId = 'wx2690a3570f2c3151'
-      redirectUrl = encodeURIComponent('http://huoyuancheng.wurenyulecang.com/#/WxAuth')
-    }
-    window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   to.meta.keepAlive = true
+//   // if (!to.meta.isBack) {
+//   //   to.meta.isBack = true
+//   // }
+//   next()
+// })
+// router.beforeEach((to, from, next) => {
+//   if (!/micromessenger/i.test(navigator.userAgent)) {
+//     next()
+//     return
+//   }
+// })
 new Vue({
   el: '#app',
   router,

@@ -112,7 +112,8 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      wxUserInfo: {}
     }
   },
   methods: {
@@ -146,6 +147,15 @@ export default {
   mounted () {
   },
   created () {
+    this.wxUserInfo = {
+      openId: this.$route.query.openId,
+      nickName: this.$route.query.nickName,
+      gender: this.$route.query.gender,
+      headerImg: this.$route.query.headerImg
+    }
+    console.log('this.wxUserInfo', this.wxUserInfo)
+    localStorage.setItem('wxUserInfo', JSON.stringify(this.wxUserInfo))
+    sessionStorage.setItem('authStatus', '1')
   },
   watch: {
   }

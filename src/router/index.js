@@ -8,7 +8,6 @@ import MyWarehouse from '@/pages/myWarehouse'
 import DetailPage from '@/pages/detailPage'
 import Login from '@/pages/login'
 import Register from '@/pages/register'
-import WxAuth from '@/pages/WxAuth'
 
 Vue.use(Router)
 
@@ -65,14 +64,6 @@ export default new Router({
     path: '/register',
     name: 'register',
     component: Register,
-    meta: {
-      keepAlive: false,
-      isBack: false
-    }
-  }, {
-    path: '/WxAuth',
-    name: 'WxAuth',
-    component: WxAuth,
     meta: {
       keepAlive: false,
       isBack: false

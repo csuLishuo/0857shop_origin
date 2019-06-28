@@ -76,10 +76,10 @@
     <div class="area-1">
       <div class="wrapper">
         <div class="portrait-box">
-          <img src="../images/icon2.png" alt="">
+          <img :src="wxUserInfo.headerImg" alt="">
         </div>
         <div class="name">
-          {{wxUserInfo.nickname}}
+          {{wxUserInfo.nickName}}
         </div>
       </div>
     </div>

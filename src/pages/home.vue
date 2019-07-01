@@ -117,7 +117,7 @@
         padding-left: px2rem(30);
         display: -webkit-box;
         overflow-x: scroll;
-        -webkit-overflow-scrolling:touch;
+        // -webkit-overflow-scrolling:touch;
         width: 100%;
         border-bottom: 1px solid #ececec;
         .item{
@@ -144,6 +144,7 @@
           .img-box{
             width: px2rem(295);
             height: px2rem(259);
+            padding: px2rem(20);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -413,10 +414,10 @@ export default {
     }
   },
   mounted () {
-    this.init()
     if (!sessionStorage.getItem('authStatus')) {
       location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=' + encodeURI('http://huoyuancheng.wurenyulecang.com:10101/#/home')
     }
+    this.init()
   },
   watch: {
   }

@@ -144,6 +144,7 @@
       <div class="text">确认注册，表示您已阅读同意 <span>《0857商城协议》</span></div>
     </div>
     <div class="area-2" @click="confirm">注册</div>
+    <div class="area-2" @click="goLogin">已注册，立即登录</div>
   </div>
 </template>
 <script>
@@ -169,6 +170,11 @@ export default {
     }
   },
   methods: {
+    goLogin () {
+      this.$router.push({
+        name: 'login'
+      })
+    },
     confirm () {
       let sendData = this.sendData
       for (let i in sendData) {

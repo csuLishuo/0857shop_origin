@@ -340,7 +340,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     getOneMorePage () {
@@ -359,7 +359,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     getGoodsCategory () {
@@ -372,7 +372,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     getGoodsList () {
@@ -395,7 +395,7 @@ export default {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     goDetail (item) {
@@ -416,8 +416,9 @@ export default {
   mounted () {
     if (!sessionStorage.getItem('authStatus')) {
       location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=0'
+    } else {
+      this.init()
     }
-    this.init()
   },
   watch: {
   }

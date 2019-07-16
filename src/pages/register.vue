@@ -200,11 +200,16 @@ export default {
           this.$router.push({
             name: 'login'
           })
+        } else if (res.result === 1) {
+          Toast.fail(res.message)
+          this.$router.push({
+            name: 'login'
+          })
         } else {
           Toast.fail(res.message)
         }
       }).catch(res => {
-        Toast.fail('系统内部错误')
+        console.error(res)
       })
     },
     getCaptcha () {
@@ -230,7 +235,7 @@ export default {
             Toast.fail(res.message)
           }
         }).catch(res => {
-          Toast.fail('系统内部错误')
+          console.error(res)
         })
       }
     }

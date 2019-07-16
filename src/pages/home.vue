@@ -415,7 +415,7 @@ export default {
   },
   mounted () {
     if (!sessionStorage.getItem('authStatus')) {
-      location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=' + encodeURI('http://huoyuancheng.wurenyulecang.com:10101/#/home')
+      location.href = 'http://huoyuancheng.wurenyulecang.com/api/user/authorize?returnUrl=0'
     }
     this.init()
   },
